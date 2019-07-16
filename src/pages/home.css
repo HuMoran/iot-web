@@ -1,0 +1,41 @@
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+  font: 1.5em sans-serif;
+}
+
+/*首页导航处的样式*/
+div.ant-layout-sider-trigger{
+  background-color: #fff;
+  color: #999;
+  font-size: 20px;
+  border-top: 1px solid #eee;
+}
+
+/*表单日历左右箭头 */
+.DayPicker-NavButton--prev {
+  left: 1rem;
+  background-image: '<';
+}
+
+.DayPicker-NavButton--next {
+  right: 1rem;
+  background-image: '>';
+}
+.DayPicker-Caption {
+  text-align: center;
+}
+.my-divider {
+  vertical-align: middle;
+  position: relative;
+  top: -0.06em
+}
+.my-divider-horizontal {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 24px 0;
+  position: relative;
+  background: #e8e8e8;
+}
