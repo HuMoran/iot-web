@@ -81,7 +81,7 @@ const data = [
     phone: '13988888888',
   },
   {
-    key: '1',
+    key: '2',
     devName: '自助网点报警主机',
     devType: '报警',
     bank: '番薯支行',
@@ -91,7 +91,7 @@ const data = [
     phone: '13988888888',
   },
   {
-    key: '1',
+    key: '3',
     devName: '自助网点报警主机',
     devType: '报警',
     bank: '番薯支行',

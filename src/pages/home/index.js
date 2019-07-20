@@ -11,10 +11,12 @@
  */
 import React from 'react';
 import { Layout, Menu,  Icon, Table, Card } from 'antd';
-import './index.css';
 import BankTotal from './bankTotal';
-import { Link } from 'react-router-dom';
 import Assets from '../assets/index';
+import { sendCommand, getStatus } from '../../utils/fetch';
+import './index.css';
+
+import bankLogo from './bankLogo.png';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -80,6 +82,8 @@ class Home extends React.Component {
   state = {
     collapsed: false,
     page: 'home',
+    '1': 'close',
+    '2': 'close',
   };
 
   onCollapse = collapsed => {
@@ -90,6 +94,17 @@ class Home extends React.Component {
   onSelect = (event) => {
     const { key } = event;
     this.setState({ page: key });
+  }
+
+  onClickSwitch = (id) => {
+    console.log('onClickSwitch');
+    const action = this.state[id] === 'close' ? 'open' : 'close';
+    sendCommand(id, action).then(msg => {
+      console.log('return msg:', msg);
+      if (msg.state === 200) {
+        this.setState({ [id]: action });
+      }
+    })
   }
 
   render() {
@@ -131,9 +146,11 @@ class Home extends React.Component {
           </Sider>
           <Layout>
             <Content style={{ margin: '0 16px' }}>
-              <div style={{ margin: '16px 0px', textAlign: 'center', fontSize: '1.4em', fontWeight: '500', }}>广州市商业银行</div>
+              <div style={{ margin: '16px 0px', textAlign: 'center', fontSize: '1.4em', fontWeight: '500', }}>
+                <img src={bankLogo} alt=''></img>
+              </div>
               {this.state.page === 'home' && (<div>
-                <BankTotal />
+                <BankTotal onClick={this.onClickSwitch} />
                   <Card style={{ margin: '16px 0px'}} title={<span style={{fontSize: '1.3em', fontWeight: '400'}}>最新告警信息</span>}>
                     <Table style={{ margin: '0px 48px'}} columns={columns} dataSource={data} scroll={{ y: 240 }} pagination={false} />
                   </Card>

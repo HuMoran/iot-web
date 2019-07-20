@@ -10,12 +10,13 @@
  * Copyright (c) 2019 Kideasoft Tech Co.,Ltd
  */
 import React from 'react';
-import { Collapse, Statistic, Row, Col, Card, Icon, Switch, Divider, Tag } from 'antd';
-
-import k1 from './33.png';
-import k2 from './33.png';
-import k3 from './33.png';
-import k4 from './44.png';
+import { Collapse, Statistic, Row, Col, Icon, Divider, Button, Avatar } from 'antd';
+import bankConfig from './bankConfig';
+import Total from './total';
+import { sendCommand, getStatus } from '../../utils/fetch';
+import openImg from './open.png';
+import closeImg from './close.png';
+import './bankTotal.css';
 
 const { Panel } = Collapse;
 
@@ -29,80 +30,106 @@ const customPanelStyle = {
   fontSize: '1.3em',
 };
 
-function Bank() {
-  return (
-    <div>
-      <Divider orientation="left" style={{ fontWeight: '350' }}>实时监测</Divider>
-      <Row gutter={12} type="flex" justify="center">
-        <Col span={4}>
-          <Statistic title="市电状态" value={'正常'} valueStyle={{ color: '#3f8600', fontSize: '1.2em' }} prefix={<Icon type="smile" />} />
-        </Col>
-        <Col span={4}>
-          <Statistic title="UPS状态" value={'断电'} valueStyle={{ color: 'red',fontSize: '1.2em' }} prefix={<Icon type="alert" style={{color: 'red'}} />} />
-        </Col>
-        <Col span={4}>
-          <Statistic title="机房温度" value={'26°C'} valueStyle={{ color: '#36cfc9',fontSize: '1.2em' }} prefix={<Icon type="cloud" style={{color: '#36cfc9'}} />} />
-        </Col>
-        <Col span={4}>
-          <Statistic title="机房湿度" value={'40%'} valueStyle={{ color: '#597ef7',fontSize: '1.2em' }} prefix={<Icon type="dashboard" style={{color: '#597ef7'}} />} />
-        </Col>
-        <Col span={4}>
-          <Statistic title="渗水监测" value={'正常'} valueStyle={{ color: '#73d13d',fontSize: '1.2em' }} prefix={<Icon type="dashboard" style={{color: '#73d13d'}} />} />
-        </Col>
-      </Row>
-      <Divider orientation="left" style={{ fontWeight: '350' }}>智能控制</Divider>
-      <Row gutter={12} type="flex" justify="center" style={{ margin: '24px 0px'}}>
-        <Col span={6} style={{ fontSize: '1em' }}>
-            <img src={k1} style={{ width: '32px'}} alt=''/>
-            <span style={{ padding: '0px 12px'}}>自助网点报警主机</span>
-        </Col>
-        <Col span={6}>
-          <img src={k2} style={{ width: '32px'}} alt=''/>
-          <span style={{ padding: '0px 12px'}}>营业网点报警主机</span>
-        </Col>
-        <Col span={6}>
-          <img src={k3} style={{ width: '32px'}} alt=''/>
-          <span style={{ padding: '0px 12px'}}>金库门禁主机</span>
-        </Col>
-      </Row>
-      <Row gutter={12} type="flex" justify="center" style={{ margin: '0px'}}>
-        <Col span={6} style={{ fontSize: '1em' }}>
-          <img src={k4} style={{ width: '32px'}} alt=''/>
-            <span style={{ padding: '0px 12px'}}>营业网点门禁主机</span>
-        </Col>
-        <Col span={6}>
-          <img src={k3} style={{ width: '32px'}} alt=''/>
-          <span style={{ padding: '0px 12px'}}>NVR主机</span>
-        </Col>
-        <Col span={6}>
-          <img src={k3} style={{ width: '32px'}} alt=''/>
-          <span style={{ padding: '0px 12px'}}>NVR主机</span>
-        </Col>
-      </Row>
-    </div>
-  );
+class Bank extends React.Component {
+  state = {
+    ...this.props.data.devices.reduce((r, e) => ({ ...r, [e.id]: e.isOpen }), {})
+  };
+  onClick = (id) => {
+    console.log('event:', id);
+    const action = this.state[id] ? 'open' : 'close';
+    sendCommand(id, action).then(msg => {
+      console.log('return msg:', msg);
+      if (msg.state === 200) {
+        this.setState({ [id]: !this.state[id] });
+      }
+    });
+  }
+  render() {
+    const { data } = this.props;
+    const normalState = [
+      { color: '#3f8600', icon: 'smile' },
+      { color: '#3f8600', icon: 'smile' },
+      { color: '#36cfc9', icon: 'cloud' },
+      { color: '#597ef7', icon: 'dashboard' },
+      { color: '#73d13d', icon: 'dashboard' },
+    ];
+    const errorState = [
+      { color: 'red', icon: 'alert' },
+      { color: 'red', icon: 'alert' },
+      { color: 'red', icon: 'cloud' },
+      { color: 'red', icon: 'dashboard' },
+      { color: 'red', icon: 'dashboard' },
+    ];
+    const { status, devices } = data;
+    const deviceTmp = devices.reduce((r, e, i) => {
+      const index = Math.floor(i/3);
+      if (r[index]) {
+        r[index].push(e);
+      } else {
+        r[index] = [e];
+      }
+      return r;
+    }, []);
+  
+    return (
+      <div>
+        <Divider orientation="left" style={{ fontWeight: '350' }}>实时监测</Divider>
+        <Row gutter={12} type="flex" justify="center">
+          {status.map((e, i) => 
+            <Col span={4} key={i}>
+              <Statistic
+                key={e.id}
+                title={e.title}
+                value={e.stateText[e.state]}
+                valueStyle={{ color: `${e.state ? normalState[i].color : errorState[i].color}`, fontSize: '1.2em' }}
+                prefix={<Icon type={`${e.state ? normalState[i].icon : errorState[i].icon}`}/>}
+              />
+            </Col>
+          )}
+        </Row>
+        <Divider orientation="left" style={{ fontWeight: '350' }}>智能控制</Divider>
+        {deviceTmp.map((line, index) =>
+          <Row gutter={12} type="flex" justify="center" style={{ margin: '24px 0px'}} key={index}>
+            {line.map((e, i) =>
+              <Col span={6} style={{ fontSize: '1em' }} key={e.id}>
+                <Avatar className='icon' src={this.state[e.id] ? openImg: closeImg} onClick={() => this.onClick(e.id)}></Avatar>
+                <span style={{ padding: '0px 12px'}}>{e.name}</span>
+              </Col>
+            )}
+          </Row>
+        )}
+      </div>
+    );
+  }
 }
-
-function BlankTotal() {
-  return (
-    <div style={{ padding: 24, background: '#fff' }}>
-      <Collapse
-        bordered={false}
-        defaultActiveKey={['1', '2', '3']}
-        expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
-      >
-        <Panel header="番薯支行" key="1" style={customPanelStyle}>
-          <Bank />
-        </Panel>
-        <Panel header="番薯支行2" key="2" style={customPanelStyle}>
-          <Bank />
-        </Panel>
-        <Panel header="番薯支行3" key="3" style={customPanelStyle}>
-          <Bank />
-        </Panel>
-      </Collapse>
-    </div>
-  )
+class BlankTotal extends React.Component {
+  state = {
+    '1': 'close',
+    '2': 'close',
+  };
+  render() {
+    const { onClick } = this.props;
+    return (
+      <div style={{ padding: 24, background: '#fff' }}>
+        <Collapse
+          bordered={false}
+          defaultActiveKey={['1', '2', '3']}
+          expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+        >
+          <Total />
+          {bankConfig.map(bank =>
+            <Panel header={bank.title} key={bank.id} style={customPanelStyle}>
+              <Bank
+                key={bank.id}
+                onClick={onClick}
+                data={bank}
+              />
+            </Panel>
+          )}
+        </Collapse>
+      </div>
+    )
+  }
 }
 
 export default BlankTotal;

@@ -1,0 +1,41 @@
+/*
+ * File: bankTotal.css
+ * Project: iot-web
+ * Created Date: Saturday, July 20th 2019, 8:41:14 pm
+ * Author: Tao Hu htax2013@gmail.com
+ * -----
+ * Last Modified: Sat Jul 20 2019
+ * Modified By: Tao Hu
+ * -----
+ * Copyright (c) 2019 Kideasoft Tech Co.,Ltd.
+ */
+
+ /* .listitem{
+  width: 100px;
+  height: 160px;
+  margin-left: 20px;
+  margin-top: 20px;
+  overflow: hidden;
+
+} */
+
+.icon {
+  /* width:100px ;
+  height: 100px;
+  background: url("../image/itemimage.png"); */
+  transition:all 0.2s;
+  cursor: pointer;
+}
+
+.icon:hover{
+  transform: scale(1.2);
+}
+
+.icon .shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: -webkit-radial-gradient(50% 50%, circle, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0) 50%);
+  -webkit-transform: rotateX(90deg) translateZ(-150px);
+  z-index: -1;
+}
