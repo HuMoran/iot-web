@@ -4,7 +4,7 @@
  * Created Date: Friday, July 19th 2019, 10:07:32 pm
  * Author: Tao Hu htax2013@gmail.com
  * -----
- * Last Modified: Sat Jul 20 2019
+ * Last Modified: Thu Jul 25 2019
  * Modified By: Tao Hu
  * -----
  * Copyright (c) 2019 Kideasoft Tech Co.,Ltd.
@@ -59,7 +59,7 @@ const columns = [{
     key: 'action',
     render: (text, record) => (
       <span>
-        <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked />
+        {/* <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked /> */}
         <Divider type="vertical" />
         <a href="javascript:;"><Icon type="edit" style={{color: '#595959'}} /></a>
         <Divider type="vertical" />
@@ -74,30 +74,120 @@ const data = [
     key: '1',
     devName: '自助网点报警主机',
     devType: '报警',
-    bank: '番薯支行',
+    bank: '总行营业部',
     brand: '亚光',
-    company: '成都君逸电子',
-    contactName: '温静欢',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
     phone: '13988888888',
   },
   {
     key: '2',
-    devName: '自助网点报警主机',
+    devName: '营业网点报警主机',
     devType: '报警',
-    bank: '番薯支行',
-    brand: '君逸',
-    company: '深圳亚光电子股份有限公司',
-    contactName: '温静欢',
+    bank: '总行营业部',
+    brand: '亚光',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
     phone: '13988888888',
   },
   {
     key: '3',
+    devName: '金库门禁主机',
+    devType: '门禁',
+    bank: '总行营业部',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '4',
+    devName: '自助网点门禁主机',
+    devType: '门禁',
+    bank: '总行营业部',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '5',
+    devName: '营业网点门禁主机',
+    devType: '门禁',
+    bank: '总行营业部',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '6',
+    devName: '营业网点NVR主机',
+    devType: 'NVR',
+    bank: '总行营业部',
+    brand: '海康',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '7',
     devName: '自助网点报警主机',
     devType: '报警',
-    bank: '番薯支行',
-    brand: '浩云',
-    company: '成都君逸电子',
-    contactName: '温静欢',
+    bank: '武侯支行',
+    brand: '亚光',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '8',
+    devName: '营业网点报警主机',
+    devType: '报警',
+    bank: '武侯支行',
+    brand: '亚光',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '9',
+    devName: '现金区门禁主机',
+    devType: '门禁',
+    bank: '武侯支行',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '10',
+    devName: '自助网点门禁主机',
+    devType: '门禁',
+    bank: '武侯支行',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '11',
+    devName: '营业网点门禁主机',
+    devType: '门禁',
+    bank: '武侯支行',
+    brand: '讯美',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
+    phone: '13988888888',
+  },
+  {
+    key: '12',
+    devName: '营业网点NVR主机',
+    devType: 'NVR',
+    bank: '武侯支行',
+    brand: '海康',
+    company: '成都科旭电子有限公司',
+    contactName: '李经理',
     phone: '13988888888',
   },
 ];

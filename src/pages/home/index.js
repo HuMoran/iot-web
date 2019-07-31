@@ -10,9 +10,13 @@
  * Copyright (c) 2019 Kideasoft Tech Co.,Ltd
  */
 import React from 'react';
-import { Layout, Menu,  Icon, Table, Card } from 'antd';
+import { Layout, Menu,  Icon, Table, Card, Button } from 'antd';
 import BankTotal from './bankTotal';
 import Assets from '../assets/index';
+import Report from '../report/index';
+import Company from '../company/index';
+import User from '../user/index';
+import Log from '../log/index';
 import { sendCommand, getStatus } from '../../utils/fetch';
 import './index.css';
 
@@ -40,78 +44,53 @@ const columns = [
   },
 ];
 
-const data = [{
-  key: 0,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行番薯支行',
-  type: '主动上报',
-  content: '市电断电',
-}, {
-  key: 1,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行天河支行',
-  type: '运维操作',
-  content: '打开NVR电源'
-}, {
-  key: 2,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行天河支行',
-  type: '运维操作',
-  content: '打开NVR电源'
-}, {
-  key: 3,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行天河支行',
-  type: '运维操作',
-  content: '打开NVR电源'
-}, {
-  key: 4,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行天河支行',
-  type: '运维操作',
-  content: '打开NVR电源'
-}, {
-  key: 5,
-  time: new Date().toLocaleString(),
-  bank: '广州农商行上帝支行',
-  type: '运维操作',
-  content: '打开报警主机'
-}];
-
 class Home extends React.Component {
   state = {
     collapsed: false,
     page: 'home',
     '1': 'close',
     '2': 'close',
-  };
+    data: window.myData.data,
+  }
 
   onCollapse = collapsed => {
     console.log(collapsed);
     this.setState({ collapsed });
-  };
+  }
 
   onSelect = (event) => {
     const { key } = event;
     this.setState({ page: key });
   }
 
-  onClickSwitch = (id) => {
-    console.log('onClickSwitch');
-    const action = this.state[id] === 'close' ? 'open' : 'close';
-    sendCommand(id, action).then(msg => {
-      console.log('return msg:', msg);
-      if (msg.state === 200) {
-        this.setState({ [id]: action });
-      }
-    })
+  onLogout = () => {
+    this.props.history.push('/login', null)
+  }
+
+  onClickSwitch = (type, content) => {
+    const data = JSON.parse(JSON.stringify(this.state.data));
+    const newData = {
+      key: data.length,
+      time: new Date().toLocaleString(),
+      bank: '成都农商银行总行营业部',
+      type,
+      content,
+    };
+    window.myData.data.unshift(newData);
+    data.unshift(newData);
+    this.setState({ data });
+    console.log(this.state.data);
   }
 
   render() {
     return (
       <div>
-        <Header style={{ background: '#018E7B', padding: '0 32px', fontSize: '1.8em', color: '#fff', fontWeight: '600', letterSpacing: '8px' }}>
-          智能安防电源运维系统
+        <Header style={{ background: '#018E7B', padding: '0 32px' }}>
+          <span style={{ fontSize: '1.8em', color: '#fff', fontWeight: '600', letterSpacing: '8px'} }>智能安防电源运维系统</span>
+          <span>
+            <Button type='primary' icon='logout' style={{ lineHeight: '64px', height: '60px', fontSize: '1em', fontWeight: '500', float: 'right'}} onClick={this.onLogout}>退出</Button>
+            <Button type='primary' icon='user' style={{ lineHeight: '64px', height: '60px', fontSize: '1em', fontWeight: '500', float: 'right'}}>温经理</Button>
+          </span>
         </Header>
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
@@ -129,6 +108,10 @@ class Home extends React.Component {
                 <Icon type="desktop" />
                 <span>资产</span>
               </Menu.Item>
+              <Menu.Item key="report">
+                <Icon type="line-chart" />
+                <span>报表</span>
+              </Menu.Item>
               <SubMenu
                 key="sub1"
                 title={
@@ -138,9 +121,9 @@ class Home extends React.Component {
                   </span>
                 }
               >
-                <Menu.Item key="3">人员</Menu.Item>
-                <Menu.Item key="4">日志</Menu.Item>
-                <Menu.Item key="5">企业信息</Menu.Item>
+                <Menu.Item key="user">人员</Menu.Item>
+                <Menu.Item key="log">日志</Menu.Item>
+                <Menu.Item key="company">企业信息</Menu.Item>
               </SubMenu>
             </Menu>
           </Sider>
@@ -152,10 +135,14 @@ class Home extends React.Component {
               {this.state.page === 'home' && (<div>
                 <BankTotal onClick={this.onClickSwitch} />
                   <Card style={{ margin: '16px 0px'}} title={<span style={{fontSize: '1.3em', fontWeight: '400'}}>最新告警信息</span>}>
-                    <Table style={{ margin: '0px 48px'}} columns={columns} dataSource={data} scroll={{ y: 240 }} pagination={false} />
+                    <Table style={{ margin: '0px 48px'}} columns={columns} dataSource={this.state.data} scroll={{ y: 240 }} pagination={false} />
                   </Card>
               </div>)}
               {this.state.page === 'assets' && <Assets />}
+              {this.state.page === 'report' && <Report />}
+              {this.state.page === 'company' && <Company />}
+              {this.state.page === 'user' && <User />}
+              {this.state.page === 'log' && <Log />}
             </Content>
             <Footer style={{ textAlign: 'center' }}>智能电源管理系统 Copyright (c) 2019 Kideasoft Tech Co.,Ltd</Footer>
           </Layout>
